@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="50%" stop-color="#047857" />
+      <stop offset="100%" stop-color="#0f766e" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <!-- Background Rounded Square -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <!-- Subtle Inner Ornamental Border -->
+  <rect x="36" y="36" width="440" height="440" rx="84" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="6" />
+  <!-- Open Quran / Book Icon -->
+  <g transform="translate(96, 120)">
+    <!-- Left Page -->
+    <path d="M160 56 C125 32, 65 28, 16 40 C7 42, 0 50, 0 60 L0 248 C0 258, 8 265, 18 263 C65 251, 125 255, 160 280 Z" fill="#ffffff" />
+    <!-- Right Page -->
+    <path d="M160 56 C195 32, 255 28, 304 40 C313 42, 320 50, 320 60 L320 248 C320 258, 312 265, 302 263 C255 251, 195 255, 160 280 Z" fill="#ecfdf5" />
+    <!-- Center Spine -->
+    <path d="M154 52 L166 52 L166 282 L154 282 Z" fill="url(#goldGrad)" />
+    <!-- Book Lines Left -->
+    <path d="M40 96 C75 90, 110 94, 132 106" stroke="#059669" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.75" />
+    <path d="M40 136 C75 130, 110 134, 132 146" stroke="#059669" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.75" />
+    <path d="M40 176 C75 170, 110 174, 132 186" stroke="#059669" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.75" />
+    <!-- Book Lines Right -->
+    <path d="M280 96 C245 90, 210 94, 188 106" stroke="#047857" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.75" />
+    <path d="M280 136 C245 130, 210 134, 188 146" stroke="#047857" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.75" />
+    <path d="M280 176 C245 170, 210 174, 188 186" stroke="#047857" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.75" />
+    <!-- Top Gold Star / Rub el Hizb Emblem -->
+    <g transform="translate(160, 8)">
+      <rect x="-18" y="-18" width="36" height="36" rx="6" fill="url(#goldGrad)" transform="rotate(45)" />
+      <rect x="-18" y="-18" width="36" height="36" rx="6" fill="url(#goldGrad)" />
+      <circle cx="0" cy="0" r="8" fill="#047857" />
+    </g>
+  </g>
+</svg>
