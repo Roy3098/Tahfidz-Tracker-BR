@@ -57,9 +57,12 @@ export const Navbar: React.FC = () => {
               onClick={() => setActiveTab('dashboard')} 
               className="flex items-center gap-2 sm:gap-2.5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 rounded-lg p-0.5 sm:p-1 min-w-0 group"
             >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-white shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-                <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-              </div>
+              <img
+                src="/pwa-192x192.png"
+                alt="Tahfidz Tracker"
+                referrerPolicy="no-referrer"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl object-cover shadow-xs shrink-0 group-hover:scale-105 transition-transform"
+              />
               <div>
                 <span className="text-sm sm:text-base font-bold tracking-tight text-slate-900 dark:text-slate-100 block leading-none">
                   Tahfidz Tracker

@@ -85,9 +85,12 @@ export const PWAInstallButton: React.FC<PWAInstallButtonProps> = ({ variant = 'n
           >
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3.5">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs shrink-0">
-                  <Smartphone className="w-5 h-5" />
-                </div>
+                <img
+                  src="/pwa-192x192.png"
+                  alt="Tahfidz Tracker"
+                  referrerPolicy="no-referrer"
+                  className="w-11 h-11 rounded-xl object-cover shadow-xs shrink-0"
+                />
                 <div>
                   <h3 className="text-sm font-bold text-slate-900 dark:text-white">
                     Install Aplikasi Tahfidz Tracker

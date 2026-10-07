@@ -950,9 +950,12 @@ export const AuthScreen: React.FC = () => {
       <div className="w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 text-white shadow-2xl relative z-10">
         {/* Brand Header */}
         <div className="text-center mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center mx-auto mb-3 shadow-inner">
-            <BookOpen className="w-8 h-8 text-white" />
-          </div>
+          <img
+            src="/pwa-192x192.png"
+            alt="Tahfidz Tracker"
+            referrerPolicy="no-referrer"
+            className="w-20 h-20 rounded-2xl object-cover mx-auto mb-3 shadow-lg border border-white/25"
+          />
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
             Tahfidz Tracker
           </h1>
