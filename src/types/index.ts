@@ -33,6 +33,8 @@ export interface HafalanEntry {
   juz: number;
   surahNumber?: number;
   surahName: string;
+  surahSampaiNumber?: number;
+  surahSampaiName?: string;
   ayatMulai?: number;
   ayatSelesai?: number;
   lembar?: number;
@@ -66,6 +68,7 @@ export interface Santri {
   orangTuaNama?: string;
   orangTuaPhone?: string;
   hafalanList: HafalanEntry[];
+  riwayatSetoran?: HafalanEntry[];
   memorizedJuzList?: number[];
   memorizedSurahNumbers?: number[];
   keteranganHafalan?: string;

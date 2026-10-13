@@ -55,8 +55,8 @@ export const EditSingleHafalanModal: React.FC<EditSingleHafalanModalProps> = ({
   );
   const [surahNumber, setSurahNumber] = useState<number>(initialSurahA);
   const [surahSampaiNumber, setSurahSampaiNumber] = useState<number>(initialSurahB);
-  const [ayatMulai, setAyatMulai] = useState<number>(record.ayatMulai || 1);
-  const [ayatSelesai, setAyatSelesai] = useState<number>(record.ayatSelesai || 7);
+  const [ayatMulai, setAyatMulai] = useState<number | ''>(record.ayatMulai || 1);
+  const [ayatSelesai, setAyatSelesai] = useState<number | ''>(record.ayatSelesai || 7);
   const [kualitas, setKualitas] = useState<HafalanQuality>(record.kualitas || 'A');
   const [tanggal, setTanggal] = useState<string>(record.tanggal || getTodayWIB());
   const [catatan, setCatatan] = useState<string>(record.catatan || '');
@@ -88,8 +88,8 @@ export const EditSingleHafalanModal: React.FC<EditSingleHafalanModalProps> = ({
       type,
       surahNumber,
       surahName: finalSurahName,
-      ayatMulai: Number(ayatMulai),
-      ayatSelesai: Number(ayatSelesai),
+      ayatMulai: Number(ayatMulai) || 1,
+      ayatSelesai: Number(ayatSelesai) || Number(ayatMulai) || 1,
       kualitas,
       tanggal,
       catatan: catatan.trim()
@@ -277,8 +277,19 @@ export const EditSingleHafalanModal: React.FC<EditSingleHafalanModalProps> = ({
                   <input
                     type="number"
                     min={1}
-                    value={ayatMulai}
-                    onChange={e => setAyatMulai(Number(e.target.value))}
+                    value={ayatMulai === 0 || ayatMulai === '' ? '' : ayatMulai}
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setAyatMulai('');
+                      } else {
+                        const num = parseInt(val, 10);
+                        setAyatMulai(isNaN(num) ? '' : num);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (!ayatMulai || ayatMulai < 1) setAyatMulai(1);
+                    }}
                     className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-100"
                     required
                   />
@@ -287,9 +298,20 @@ export const EditSingleHafalanModal: React.FC<EditSingleHafalanModalProps> = ({
                   <label className="block text-[10px] text-slate-500 dark:text-slate-400 mb-0.5">Sampai Ayat</label>
                   <input
                     type="number"
-                    min={1}
-                    value={ayatSelesai}
-                    onChange={e => setAyatSelesai(Number(e.target.value))}
+                    min={Number(ayatMulai) || 1}
+                    value={ayatSelesai === 0 || ayatSelesai === '' ? '' : ayatSelesai}
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setAyatSelesai('');
+                      } else {
+                        const num = parseInt(val, 10);
+                        setAyatSelesai(isNaN(num) ? '' : num);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (!ayatSelesai || ayatSelesai < 1) setAyatSelesai(Number(ayatMulai) || 1);
+                    }}
                     className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-xs text-slate-800 dark:text-slate-100"
                     required
                   />
@@ -355,8 +377,19 @@ export const EditSingleHafalanModal: React.FC<EditSingleHafalanModalProps> = ({
                   <input
                     type="number"
                     min={1}
-                    value={ayatMulai}
-                    onChange={e => setAyatMulai(Number(e.target.value))}
+                    value={ayatMulai === 0 || ayatMulai === '' ? '' : ayatMulai}
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setAyatMulai('');
+                      } else {
+                        const num = parseInt(val, 10);
+                        setAyatMulai(isNaN(num) ? '' : num);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (!ayatMulai || ayatMulai < 1) setAyatMulai(1);
+                    }}
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-100"
                     required
                   />
@@ -365,9 +398,20 @@ export const EditSingleHafalanModal: React.FC<EditSingleHafalanModalProps> = ({
                   <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Ayat Selesai</label>
                   <input
                     type="number"
-                    min={1}
-                    value={ayatSelesai}
-                    onChange={e => setAyatSelesai(Number(e.target.value))}
+                    min={Number(ayatMulai) || 1}
+                    value={ayatSelesai === 0 || ayatSelesai === '' ? '' : ayatSelesai}
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setAyatSelesai('');
+                      } else {
+                        const num = parseInt(val, 10);
+                        setAyatSelesai(isNaN(num) ? '' : num);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (!ayatSelesai || ayatSelesai < 1) setAyatSelesai(Number(ayatMulai) || 1);
+                    }}
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-100"
                     required
                   />

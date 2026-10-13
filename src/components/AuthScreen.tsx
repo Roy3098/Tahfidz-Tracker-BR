@@ -14,6 +14,7 @@ import {
 } from '../firebase';
 import { useTahfidz } from '../context/TahfidzContext';
 import { PWAInstallButton } from './PWAInstallButton';
+import { DeveloperInfoModal } from './DeveloperInfoModal';
 import {
   BookOpen,
   ShieldCheck,
@@ -37,7 +38,8 @@ import {
   History,
   Copy,
   ExternalLink,
-  RefreshCw
+  RefreshCw,
+  Info
 } from 'lucide-react';
 import { Role, User } from '../types';
 
@@ -88,7 +90,9 @@ export const AuthScreen: React.FC = () => {
     userAccounts,
     deletedUserIds,
     deletedUsersList,
-    systemSettings
+    systemSettings,
+    isDeveloperInfoOpen,
+    setIsDeveloperInfoOpen
   } = useTahfidz();
 
   type ViewMode =
@@ -439,16 +443,19 @@ export const AuthScreen: React.FC = () => {
             (sessionStorage.getItem('tahfidz_pending_google_role') as Role) || 'guru';
           sessionStorage.removeItem('tahfidz_pending_google_role');
           const fbUser = result.user;
-          await processGoogleUserResult(
-            {
-              uid: fbUser.uid,
-              name: fbUser.displayName || fbUser.email.split('@')[0],
-              email: fbUser.email,
-              avatar: fbUser.photoURL || undefined,
-              phone: fbUser.phoneNumber || undefined
-            },
-            savedRole
-          );
+          const userEmail = fbUser.email;
+          if (userEmail) {
+            await processGoogleUserResult(
+              {
+                uid: fbUser.uid,
+                name: fbUser.displayName || userEmail.split('@')[0],
+                email: userEmail,
+                avatar: fbUser.photoURL || undefined,
+                phone: fbUser.phoneNumber || undefined
+              },
+              savedRole
+            );
+          }
         }
       })
       .catch(() => {
@@ -1081,6 +1088,18 @@ export const AuthScreen: React.FC = () => {
 
               <div className="pt-1">
                 <PWAInstallButton variant="auth" />
+              </div>
+
+              {/* Tombol Info & Kontak Pengembang */}
+              <div className="pt-2 text-center">
+                <button
+                  type="button"
+                  onClick={() => setIsDeveloperInfoOpen(true)}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-100 hover:text-white transition-colors cursor-pointer py-1.5 px-3 rounded-xl hover:bg-white/10"
+                >
+                  <Info className="w-3.5 h-3.5 text-emerald-300" />
+                  <span>Informasi & Pesan Pengembang</span>
+                </button>
               </div>
             </div>
           </div>
@@ -2082,6 +2101,12 @@ export const AuthScreen: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Global Developer Info Modal on Login Screen */}
+      <DeveloperInfoModal
+        isOpen={isDeveloperInfoOpen}
+        onClose={() => setIsDeveloperInfoOpen(false)}
+      />
     </div>
   );
 };

@@ -110,7 +110,7 @@ export const KelolaDataView: React.FC = () => {
   const [schoolLeaderInput, setSchoolLeaderInput] = useState(systemSettings?.schoolLeader || 'Ustadz H. Ahmad Ridwan, Lc., M.Ag.');
   const [academicYearInput, setAcademicYearInput] = useState(systemSettings?.academicYear || '2026/2027 (Ganjil)');
   const [minTasmiGradeInput, setMinTasmiGradeInput] = useState(systemSettings?.minTasmiGrade || 'B');
-  const [weeklyTargetInput, setWeeklyTargetInput] = useState(systemSettings?.targetWeeklySetoran || 10);
+  const [weeklyTargetInput, setWeeklyTargetInput] = useState<number | ''>(systemSettings?.targetWeeklySetoran || 10);
   const [whatsappHelpdeskInput, setWhatsappHelpdeskInput] = useState(systemSettings?.helpdeskWhatsapp || '6281234567800');
   const [isSavingSettings, setIsSavingSettings] = useState(false);
 
@@ -207,7 +207,7 @@ export const KelolaDataView: React.FC = () => {
 
   // Target Management State
   const [targetNama, setTargetNama] = useState('');
-  const [targetJuz, setTargetJuz] = useState(10);
+  const [targetJuz, setTargetJuz] = useState<number | ''>(10);
   const [editingTarget, setEditingTarget] = useState<TargetHafalan | null>(null);
 
   // Sesi Management State
@@ -338,8 +338,8 @@ export const KelolaDataView: React.FC = () => {
       kelasId: editingSantri.kelasId,
       gender: editingSantri.gender,
       kelompokId: editingSantri.kelompokId,
-      targetJuz: Number(editingSantri.targetJuz),
-      totalJuzMemorized: Number(editingSantri.totalJuzMemorized),
+      targetJuz: Number(editingSantri.targetJuz) || 1,
+      totalJuzMemorized: Number(editingSantri.totalJuzMemorized) || 0,
       orangTuaNama: editingSantri.orangTuaNama?.trim() || '',
       orangTuaPhone: editingSantri.orangTuaPhone?.trim() || ''
     });
@@ -408,7 +408,7 @@ export const KelolaDataView: React.FC = () => {
     e.preventDefault();
     if (!editingTarget) return;
 
-    updateTarget(editingTarget.id, editingTarget.nama, Number(editingTarget.jumlahJuz));
+    updateTarget(editingTarget.id, editingTarget.nama, Number(editingTarget.jumlahJuz) || 1);
     setEditingTarget(null);
     showFeedback('Data target hafalan berhasil diperbarui!');
   };
@@ -1023,8 +1023,19 @@ export const KelolaDataView: React.FC = () => {
                   type="number"
                   min={1}
                   max={30}
-                  value={targetJuz}
-                  onChange={e => setTargetJuz(Number(e.target.value))}
+                  value={targetJuz === '' || targetJuz === 0 ? '' : targetJuz}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setTargetJuz('');
+                    } else {
+                      const num = parseInt(val, 10);
+                      setTargetJuz(isNaN(num) ? '' : num);
+                    }
+                  }}
+                  onBlur={() => {
+                    if (!targetJuz || targetJuz < 1) setTargetJuz(1);
+                  }}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-750 focus:ring-2 focus:ring-emerald-500 outline-none"
                   required
                 />
@@ -1852,8 +1863,19 @@ export const KelolaDataView: React.FC = () => {
                       type="number"
                       min={1}
                       max={50}
-                      value={weeklyTargetInput}
-                      onChange={e => setWeeklyTargetInput(Number(e.target.value))}
+                      value={weeklyTargetInput === '' || weeklyTargetInput === 0 ? '' : weeklyTargetInput}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (val === '') {
+                          setWeeklyTargetInput('');
+                        } else {
+                          const num = parseInt(val, 10);
+                          setWeeklyTargetInput(isNaN(num) ? '' : num);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (!weeklyTargetInput || weeklyTargetInput < 1) setWeeklyTargetInput(10);
+                      }}
                       className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-xl text-xs sm:text-sm focus:bg-white dark:focus:bg-slate-850 focus:ring-2 focus:ring-amber-500 outline-none"
                     />
                     <span className="text-[11px] text-slate-400 dark:text-slate-500">Digunakan sebagai parameter capaian pada grafik tren hafalan.</span>
@@ -2716,8 +2738,19 @@ export const KelolaDataView: React.FC = () => {
                     type="number"
                     min={1}
                     max={30}
-                    value={editingSantri.targetJuz}
-                    onChange={e => setEditingSantri({ ...editingSantri, targetJuz: Number(e.target.value) })}
+                    value={!editingSantri.targetJuz ? '' : editingSantri.targetJuz}
+                    onChange={e => {
+                      const val = e.target.value;
+                      setEditingSantri({
+                        ...editingSantri,
+                        targetJuz: val === '' ? ('' as any) : (parseInt(val, 10) || 1)
+                      });
+                    }}
+                    onBlur={() => {
+                      if (!editingSantri.targetJuz || Number(editingSantri.targetJuz) < 1) {
+                        setEditingSantri(prev => prev ? { ...prev, targetJuz: 1 } : null);
+                      }
+                    }}
                     className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                 </div>
@@ -2729,8 +2762,20 @@ export const KelolaDataView: React.FC = () => {
                   type="number"
                   min={0}
                   max={30}
-                  value={editingSantri.totalJuzMemorized}
-                  onChange={e => setEditingSantri({ ...editingSantri, totalJuzMemorized: Number(e.target.value) })}
+                  step="0.1"
+                  value={editingSantri.totalJuzMemorized === 0 ? 0 : (!editingSantri.totalJuzMemorized ? '' : editingSantri.totalJuzMemorized)}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setEditingSantri({
+                      ...editingSantri,
+                      totalJuzMemorized: val === '' ? ('' as any) : (parseFloat(val) || 0)
+                    });
+                  }}
+                  onBlur={() => {
+                    if ((editingSantri.totalJuzMemorized as any) === '' || isNaN(Number(editingSantri.totalJuzMemorized))) {
+                      setEditingSantri(prev => prev ? { ...prev, totalJuzMemorized: 0 } : null);
+                    }
+                  }}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs font-bold text-emerald-700 dark:text-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
@@ -3003,8 +3048,19 @@ export const KelolaDataView: React.FC = () => {
                   type="number"
                   min={1}
                   max={30}
-                  value={editingTarget.jumlahJuz}
-                  onChange={e => setEditingTarget({ ...editingTarget, jumlahJuz: Number(e.target.value) })}
+                  value={!editingTarget.jumlahJuz ? '' : editingTarget.jumlahJuz}
+                  onChange={e => {
+                    const val = e.target.value;
+                    setEditingTarget({
+                      ...editingTarget,
+                      jumlahJuz: val === '' ? ('' as any) : (parseInt(val, 10) || 1)
+                    });
+                  }}
+                  onBlur={() => {
+                    if (!editingTarget.jumlahJuz || Number(editingTarget.jumlahJuz) < 1) {
+                      setEditingTarget(prev => prev ? { ...prev, jumlahJuz: 1 } : null);
+                    }
+                  }}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   required
                 />

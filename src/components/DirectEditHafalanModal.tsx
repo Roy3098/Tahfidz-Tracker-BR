@@ -18,8 +18,8 @@ export const DirectEditHafalanModal: React.FC<DirectEditHafalanModalProps> = ({
 }) => {
   const { updateSantri } = useTahfidz();
 
-  const [totalJuz, setTotalJuz] = useState<number>(student.totalJuzMemorized);
-  const [targetJuz, setTargetJuz] = useState<number>(student.targetJuz);
+  const [totalJuz, setTotalJuz] = useState<number | ''>(student.totalJuzMemorized);
+  const [targetJuz, setTargetJuz] = useState<number | ''>(student.targetJuz);
   const [targetSelesai, setTargetSelesai] = useState<string>(student.targetSelesai || 'Desember 2026');
   
   // Setoran terakhir manual adjustment
@@ -36,7 +36,7 @@ export const DirectEditHafalanModal: React.FC<DirectEditHafalanModalProps> = ({
   const [inputMode, setInputMode] = useState<'decimal' | 'lembar'>('lembar');
 
   // Breakdown of current totalJuz
-  const breakdown = parseHafalan(totalJuz);
+  const breakdown = parseHafalan(Number(totalJuz) || 0);
 
   useEffect(() => {
     setTotalJuz(student.totalJuzMemorized);
@@ -73,7 +73,7 @@ export const DirectEditHafalanModal: React.FC<DirectEditHafalanModalProps> = ({
   };
 
   const handleAddPreset = (deltaLembar: number) => {
-    const currentLembarTotal = Math.round(totalJuz * 10);
+    const currentLembarTotal = Math.round((Number(totalJuz) || 0) * 10);
     const newTotal = Math.max(0, Math.min(300, currentLembarTotal + deltaLembar));
     setTotalJuz(Math.round(newTotal) / 10);
   };
@@ -294,8 +294,19 @@ export const DirectEditHafalanModal: React.FC<DirectEditHafalanModalProps> = ({
                     step="0.1"
                     min={0}
                     max={30}
-                    value={totalJuz}
-                    onChange={e => setTotalJuz(parseFloat(e.target.value) || 0)}
+                    value={totalJuz === '' ? '' : totalJuz}
+                    onChange={e => {
+                      const val = e.target.value;
+                      if (val === '') {
+                        setTotalJuz('');
+                      } else {
+                        const parsed = parseFloat(val);
+                        setTotalJuz(isNaN(parsed) ? '' : parsed);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (totalJuz === '') setTotalJuz(0);
+                    }}
                     className="w-full px-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-base font-bold text-emerald-700 dark:text-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 tabular-nums"
                     required
                   />
@@ -323,8 +334,19 @@ export const DirectEditHafalanModal: React.FC<DirectEditHafalanModalProps> = ({
                   min={1}
                   max={30}
                   step="0.5"
-                  value={targetJuz}
-                  onChange={e => setTargetJuz(Number(e.target.value))}
+                  value={targetJuz === '' || targetJuz === 0 ? '' : targetJuz}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setTargetJuz('');
+                    } else {
+                      const parsed = parseFloat(val);
+                      setTargetJuz(isNaN(parsed) ? '' : parsed);
+                    }
+                  }}
+                  onBlur={() => {
+                    if (!targetJuz || targetJuz < 1) setTargetJuz(1);
+                  }}
                   className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-800 dark:text-slate-100 focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-emerald-500 tabular-nums"
                   required
                 />

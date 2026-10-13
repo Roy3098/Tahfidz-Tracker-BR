@@ -9,7 +9,8 @@ import { AbsensiView } from './components/AbsensiView';
 import { TasmiView } from './components/TasmiView';
 import { KelolaDataView } from './components/KelolaDataView';
 import { AddHafalanModal } from './components/AddHafalanModal';
-import { Megaphone, AlertTriangle, ShieldCheck, Wrench, ArrowRight, X, Phone } from 'lucide-react';
+import { DeveloperInfoModal } from './components/DeveloperInfoModal';
+import { Megaphone, AlertTriangle, ShieldCheck, Wrench, ArrowRight, X, Phone, Info } from 'lucide-react';
 
 function MainAppContent() {
   const { 
@@ -19,7 +20,9 @@ function MainAppContent() {
     updateSystemSettings, 
     originalSuperAdminUser, 
     stopImpersonation,
-    logout 
+    logout,
+    isDeveloperInfoOpen,
+    setIsDeveloperInfoOpen
   } = useTahfidz();
   const [isAddHafalanModalOpen, setIsAddHafalanModalOpen] = useState(false);
   const [isAnnouncementDismissed, setIsAnnouncementDismissed] = useState(false);
@@ -185,9 +188,26 @@ function MainAppContent() {
 
       {/* Quiet Footer */}
       <footer className="hidden md:block py-6 border-t border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors">
-        <p>{systemSettings.schoolName || 'Tahfidz Tracker'} · Sistem Pencatatan & Evaluasi Hafalan Al-Qur'an Terpadu</p>
+        <div className="flex items-center justify-center gap-2 flex-wrap">
+          <span>{systemSettings.schoolName || 'Tahfidz Tracker'} · Sistem Pencatatan & Evaluasi Hafalan Al-Qur'an Terpadu</span>
+          <span className="text-slate-300 dark:text-slate-700">·</span>
+          <button
+            type="button"
+            onClick={() => setIsDeveloperInfoOpen(true)}
+            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-850 dark:hover:text-emerald-300 font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer transition-colors"
+          >
+            <Info className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Info Pengembang</span>
+          </button>
+        </div>
         <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">بارك الله فيكم · Dibuat dengan penuh dedikasi untuk para penghafal Al-Qur'an</p>
       </footer>
+
+      {/* Global Developer Info Modal */}
+      <DeveloperInfoModal
+        isOpen={isDeveloperInfoOpen}
+        onClose={() => setIsDeveloperInfoOpen(false)}
+      />
     </div>
   );
 }

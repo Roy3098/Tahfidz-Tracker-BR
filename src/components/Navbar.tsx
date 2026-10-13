@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTahfidz } from '../context/TahfidzContext';
-import { BookOpen, LogOut, Cloud, RefreshCw, Moon, Sun, User, Edit3, ChevronDown, Key, Users, Check } from 'lucide-react';
+import { BookOpen, LogOut, Cloud, RefreshCw, Moon, Sun, User, Edit3, ChevronDown, Key, Users, Check, Info } from 'lucide-react';
 import { ProfileModal } from './ProfileModal';
 import { PWAInstallButton } from './PWAInstallButton';
 
@@ -15,7 +15,8 @@ export const Navbar: React.FC = () => {
     toggleDarkMode,
     switchParentActiveChild,
     parentChildren,
-    systemSettings
+    systemSettings,
+    setIsDeveloperInfoOpen
   } = useTahfidz();
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [profileModalTab, setProfileModalTab] = useState<'view' | 'edit'>('view');
@@ -271,6 +272,24 @@ export const Navbar: React.FC = () => {
                       <div>
                         <div>Edit Profil</div>
                         <span className="text-[10px] text-slate-400 block font-normal">Ubah nama, kontak & sandi</span>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsDropdownOpen(false);
+                        setIsDeveloperInfoOpen(true);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/40 rounded-xl transition-colors text-left group"
+                    >
+                      <Info className="w-4 h-4 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform" />
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span>Info Pengembang</span>
+                          <span className="text-[9px] font-bold px-1.5 py-0.2 bg-emerald-100 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200 rounded">Abu Uzair</span>
+                        </div>
+                        <span className="text-[10px] text-slate-400 block font-normal">Pesan & kontak pengembang</span>
                       </div>
                     </button>
                   </div>

@@ -271,7 +271,7 @@ export const InfrastructureUsagePanel: React.FC = () => {
 
     // Hitung total sub-item riwayat setoran di dalam dokumen santri
     const totalSetoranRecords = santriList.reduce(
-      (sum, s) => sum + (Array.isArray(s.riwayatSetoran) ? s.riwayatSetoran.length : 0),
+      (sum, s) => sum + (Array.isArray(s.hafalanList) ? s.hafalanList.length : (Array.isArray(s.riwayatSetoran) ? s.riwayatSetoran.length : 0)),
       0
     );
 
@@ -290,7 +290,8 @@ export const InfrastructureUsagePanel: React.FC = () => {
     ).length;
 
     const todaySetoranWrites = santriList.reduce((acc, s) => {
-      const todayCount = (s.riwayatSetoran || []).filter(r =>
+      const records = s.hafalanList || s.riwayatSetoran || [];
+      const todayCount = records.filter(r =>
         (r.tanggal || '').startsWith(todayPrefix)
       ).length;
       return acc + todayCount;

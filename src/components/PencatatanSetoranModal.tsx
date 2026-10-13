@@ -47,8 +47,8 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
   const [surahNumber, setSurahNumber] = useState<number>(1);
   const [surahSampaiNumber, setSurahSampaiNumber] = useState<number>(1);
   const [murojaahMode, setMurojaahMode] = useState<'surah_range' | 'single_surah'>('surah_range');
-  const [ayatMulai, setAyatMulai] = useState<number>(1);
-  const [ayatSelesai, setAyatSelesai] = useState<number>(7);
+  const [ayatMulai, setAyatMulai] = useState<number | ''>(1);
+  const [ayatSelesai, setAyatSelesai] = useState<number | ''>(7);
   const [kualitas, setKualitas] = useState<HafalanQuality>('A');
   const [catatan, setCatatan] = useState<string>('');
   const [isMushafDetailOpen, setIsMushafDetailOpen] = useState<boolean>(false);
@@ -84,8 +84,8 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
   // Perhitungan Data Halaman & Lembar Mushaf Utsmani secara Realtime & Otomatis
   const utsmaniData = calculateUtsmaniHalamanDanLembar({
     surahNumber,
-    ayatMulai,
-    ayatSelesai,
+    ayatMulai: Number(ayatMulai) || 1,
+    ayatSelesai: Number(ayatSelesai) || Number(ayatMulai) || 1,
     surahSampaiNumber: isMurojaahRange ? surahSampaiNumber : undefined
   });
 
@@ -132,7 +132,7 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
 
   const handleSetOneFullPage = () => {
     if (!activeSurahMeta) return;
-    const start = Math.max(1, ayatMulai || 1);
+    const start = Math.max(1, Number(ayatMulai) || 1);
     const end = Math.min(activeSurahMeta.totalAyahs, start + ayahsPerOnePage - 1);
     setAyatMulai(start);
     setAyatSelesai(end);
@@ -140,7 +140,7 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
 
   const handleSetTwoFullPages = () => {
     if (!activeSurahMeta) return;
-    const start = Math.max(1, ayatMulai || 1);
+    const start = Math.max(1, Number(ayatMulai) || 1);
     const end = Math.min(activeSurahMeta.totalAyahs, start + ayahsPerOnePage * 2 - 1);
     setAyatMulai(start);
     setAyatSelesai(end);
@@ -167,6 +167,9 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
     const effectiveLembar = utsmaniData.totalLembar;
     const effectiveHalaman = utsmaniData.totalHalaman;
 
+    const finalAyatMulai = Number(ayatMulai) || 1;
+    const finalAyatSelesai = Number(ayatSelesai) || finalAyatMulai;
+
     onSave(
       record.id,
       {
@@ -175,8 +178,8 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
         juz: isMurojaahRange ? juz : (utsmaniData.juzEstimate || juz),
         surahNumber,
         surahName: finalSurahName,
-        ayatMulai,
-        ayatSelesai,
+        ayatMulai: finalAyatMulai,
+        ayatSelesai: finalAyatSelesai,
         lembar: effectiveLembar,
         halaman: effectiveHalaman,
         kualitas,
@@ -385,8 +388,19 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
                     <input
                       type="number"
                       min={1}
-                      value={ayatMulai}
-                      onChange={e => setAyatMulai(Number(e.target.value))}
+                      value={ayatMulai === 0 || ayatMulai === '' ? '' : ayatMulai}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (val === '') {
+                          setAyatMulai('');
+                        } else {
+                          const num = parseInt(val, 10);
+                          setAyatMulai(isNaN(num) ? '' : num);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (!ayatMulai || ayatMulai < 1) setAyatMulai(1);
+                      }}
                       className="w-20 px-2 py-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg text-xs text-slate-900 dark:text-slate-100"
                     />
                   </div>
@@ -427,8 +441,19 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
                     <input
                       type="number"
                       min={1}
-                      value={ayatSelesai}
-                      onChange={e => setAyatSelesai(Number(e.target.value))}
+                      value={ayatSelesai === 0 || ayatSelesai === '' ? '' : ayatSelesai}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (val === '') {
+                          setAyatSelesai('');
+                        } else {
+                          const num = parseInt(val, 10);
+                          setAyatSelesai(isNaN(num) ? '' : num);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (!ayatSelesai || ayatSelesai < 1) setAyatSelesai(Number(ayatMulai) || 1);
+                      }}
                       className="w-20 px-2 py-1 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg text-xs text-slate-900 dark:text-slate-100"
                     />
                   </div>
@@ -563,8 +588,19 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
                       type="number"
                       min={1}
                       max={activeSurahMeta?.totalAyahs || 286}
-                      value={ayatMulai}
-                      onChange={e => setAyatMulai(Number(e.target.value))}
+                      value={ayatMulai === 0 || ayatMulai === '' ? '' : ayatMulai}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (val === '') {
+                          setAyatMulai('');
+                        } else {
+                          const num = parseInt(val, 10);
+                          setAyatMulai(isNaN(num) ? '' : num);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (!ayatMulai || ayatMulai < 1) setAyatMulai(1);
+                      }}
                       placeholder="1"
                       className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold"
                     />
@@ -575,10 +611,21 @@ export const PencatatanSetoranModal: React.FC<PencatatanSetoranModalProps> = ({
                     </label>
                     <input
                       type="number"
-                      min={ayatMulai}
+                      min={Number(ayatMulai) || 1}
                       max={activeSurahMeta?.totalAyahs || 286}
-                      value={ayatSelesai}
-                      onChange={e => setAyatSelesai(Number(e.target.value))}
+                      value={ayatSelesai === 0 || ayatSelesai === '' ? '' : ayatSelesai}
+                      onChange={e => {
+                        const val = e.target.value;
+                        if (val === '') {
+                          setAyatSelesai('');
+                        } else {
+                          const num = parseInt(val, 10);
+                          setAyatSelesai(isNaN(num) ? '' : num);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (!ayatSelesai || ayatSelesai < 1) setAyatSelesai(Number(ayatMulai) || 1);
+                      }}
                       placeholder="Akhir"
                       className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold"
                     />

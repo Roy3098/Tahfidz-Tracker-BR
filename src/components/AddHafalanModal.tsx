@@ -22,8 +22,8 @@ export const AddHafalanModal: React.FC<AddHafalanModalProps> = ({
   const [studentId, setStudentId] = useState(preselectedStudentId || santriList[0]?.id || '');
   const [juz, setJuz] = useState<number>(1);
   const [surahNumber, setSurahNumber] = useState<number>(1);
-  const [ayatMulai, setAyatMulai] = useState<number>(1);
-  const [ayatSelesai, setAyatSelesai] = useState<number>(7);
+  const [ayatMulai, setAyatMulai] = useState<number | ''>(1);
+  const [ayatSelesai, setAyatSelesai] = useState<number | ''>(7);
   const [targetHalaman, setTargetHalaman] = useState<number>(1);
   const [kualitas, setKualitas] = useState<HafalanQuality>('A');
   const [type, setType] = useState<HafalanType>('baru');
@@ -69,13 +69,15 @@ export const AddHafalanModal: React.FC<AddHafalanModalProps> = ({
   const currentSurah = ALL_SURAHS.find(s => s.number === surahNumber);
   const utsmaniData = calculateUtsmaniHalamanDanLembar({
     surahNumber,
-    ayatMulai,
-    ayatSelesai
+    ayatMulai: Number(ayatMulai) || 1,
+    ayatSelesai: Number(ayatSelesai) || Number(ayatMulai) || 1
   });
 
   // Calculate page fraction to know if santri completed 1 full page or partial
   const totalPagesInSurah = currentSurah ? Math.max(1, currentSurah.endPage - currentSurah.startPage + 1) : 1;
-  const ayatCount = Math.max(1, ayatSelesai - ayatMulai + 1);
+  const numAyatSelesai = Number(ayatSelesai) || 1;
+  const numAyatMulai = Number(ayatMulai) || 1;
+  const ayatCount = Math.max(1, numAyatSelesai - numAyatMulai + 1);
   const pageFraction = currentSurah ? Number(((ayatCount * totalPagesInSurah) / currentSurah.totalAyahs).toFixed(2)) : 1;
   const isFullPageOrMore = pageFraction >= 0.95 || (utsmaniData.halamanSelesai - utsmaniData.halamanMulai >= 1);
 
@@ -107,6 +109,9 @@ export const AddHafalanModal: React.FC<AddHafalanModalProps> = ({
       return;
     }
 
+    const finalAyatMulai = Number(ayatMulai) || 1;
+    const finalAyatSelesai = Number(ayatSelesai) || finalAyatMulai;
+
     addHafalanRecord({
       studentId,
       studentName: selectedStudent.nama,
@@ -115,8 +120,8 @@ export const AddHafalanModal: React.FC<AddHafalanModalProps> = ({
       juz: utsmaniData.juzEstimate || juz,
       surahNumber,
       surahName: currentSurah ? currentSurah.name : `Surah ${surahNumber}`,
-      ayatMulai,
-      ayatSelesai,
+      ayatMulai: finalAyatMulai,
+      ayatSelesai: finalAyatSelesai,
       halaman: utsmaniData.totalHalaman,
       lembar: utsmaniData.totalLembar,
       kualitas,
@@ -289,8 +294,19 @@ export const AddHafalanModal: React.FC<AddHafalanModalProps> = ({
                   type="number"
                   min={1}
                   max={currentSurah?.totalAyahs || 286}
-                  value={ayatMulai}
-                  onChange={e => setAyatMulai(Number(e.target.value))}
+                  value={ayatMulai === 0 || ayatMulai === '' ? '' : ayatMulai}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setAyatMulai('');
+                    } else {
+                      const num = parseInt(val, 10);
+                      setAyatMulai(isNaN(num) ? '' : num);
+                    }
+                  }}
+                  onBlur={() => {
+                    if (!ayatMulai || ayatMulai < 1) setAyatMulai(1);
+                  }}
                   placeholder="Mulai ayat"
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold"
                   required
@@ -299,10 +315,21 @@ export const AddHafalanModal: React.FC<AddHafalanModalProps> = ({
               <div>
                 <input
                   type="number"
-                  min={ayatMulai}
+                  min={Number(ayatMulai) || 1}
                   max={currentSurah?.totalAyahs || 286}
-                  value={ayatSelesai}
-                  onChange={e => setAyatSelesai(Number(e.target.value))}
+                  value={ayatSelesai === 0 || ayatSelesai === '' ? '' : ayatSelesai}
+                  onChange={e => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setAyatSelesai('');
+                    } else {
+                      const num = parseInt(val, 10);
+                      setAyatSelesai(isNaN(num) ? '' : num);
+                    }
+                  }}
+                  onBlur={() => {
+                    if (!ayatSelesai || ayatSelesai < 1) setAyatSelesai(Number(ayatMulai) || 1);
+                  }}
                   placeholder="Sampai ayat"
                   className="w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold"
                   required

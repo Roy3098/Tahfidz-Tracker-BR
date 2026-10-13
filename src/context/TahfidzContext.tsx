@@ -295,6 +295,8 @@ export interface TahfidzContextType {
   impersonateUser: (user: User) => void;
   stopImpersonation: () => void;
   deleteAnyRecord: (collectionName: string, id: string) => Promise<boolean>;
+  isDeveloperInfoOpen: boolean;
+  setIsDeveloperInfoOpen: (open: boolean) => void;
 }
 
 const TahfidzContext = createContext<TahfidzContextType | undefined>(undefined);
@@ -320,6 +322,8 @@ export const TahfidzProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
     return null;
   });
+
+  const [isDeveloperInfoOpen, setIsDeveloperInfoOpen] = useState(false);
 
   const [systemSettings, setSystemSettings] = useState<SystemSettings>(() => {
     const defaultSettings: SystemSettings = {
@@ -3426,7 +3430,9 @@ export const TahfidzProvider: React.FC<{ children: React.ReactNode }> = ({ child
         originalSuperAdminUser,
         impersonateUser,
         stopImpersonation,
-        deleteAnyRecord
+        deleteAnyRecord,
+        isDeveloperInfoOpen,
+        setIsDeveloperInfoOpen
       }}
     >
       {children}
