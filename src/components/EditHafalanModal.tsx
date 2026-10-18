@@ -455,16 +455,16 @@ export const EditHafalanModal: React.FC<EditHafalanModalProps> = ({
                             <input
                               type="number"
                               min={1}
-                              value={!editRecordDraft.ayatMulai ? '' : (editRecordDraft.ayatMulai ?? item.ayatMulai ?? '')}
+                              value={editRecordDraft.ayatMulai !== undefined ? ((editRecordDraft.ayatMulai as any) === '' ? '' : editRecordDraft.ayatMulai) : (item.ayatMulai ?? '')}
                               onChange={e => {
                                 const val = e.target.value;
                                 setEditRecordDraft(prev => ({
                                   ...prev,
-                                  ayatMulai: val === '' ? ('' as any) : (parseInt(val, 10) || 1)
+                                  ayatMulai: val === '' ? ('' as any) : (parseInt(val, 10) || '')
                                 }));
                               }}
                               onBlur={() => {
-                                if (!editRecordDraft.ayatMulai || editRecordDraft.ayatMulai < 1) {
+                                if ((editRecordDraft.ayatMulai as any) === '' || (Number(editRecordDraft.ayatMulai) < 1)) {
                                   setEditRecordDraft(prev => ({ ...prev, ayatMulai: item.ayatMulai || 1 }));
                                 }
                               }}
@@ -477,16 +477,16 @@ export const EditHafalanModal: React.FC<EditHafalanModalProps> = ({
                             <input
                               type="number"
                               min={1}
-                              value={!editRecordDraft.ayatSelesai ? '' : (editRecordDraft.ayatSelesai ?? item.ayatSelesai ?? '')}
+                              value={editRecordDraft.ayatSelesai !== undefined ? ((editRecordDraft.ayatSelesai as any) === '' ? '' : editRecordDraft.ayatSelesai) : (item.ayatSelesai ?? '')}
                               onChange={e => {
                                 const val = e.target.value;
                                 setEditRecordDraft(prev => ({
                                   ...prev,
-                                  ayatSelesai: val === '' ? ('' as any) : (parseInt(val, 10) || 1)
+                                  ayatSelesai: val === '' ? ('' as any) : (parseInt(val, 10) || '')
                                 }));
                               }}
                               onBlur={() => {
-                                if (!editRecordDraft.ayatSelesai || editRecordDraft.ayatSelesai < 1) {
+                                if ((editRecordDraft.ayatSelesai as any) === '' || (Number(editRecordDraft.ayatSelesai) < 1)) {
                                   setEditRecordDraft(prev => ({ ...prev, ayatSelesai: item.ayatSelesai || 7 }));
                                 }
                               }}

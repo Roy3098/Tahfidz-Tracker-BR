@@ -187,17 +187,17 @@ function MainAppContent() {
       <BottomNav />
 
       {/* Quiet Footer */}
-      <footer className="hidden md:block py-6 border-t border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors">
-        <div className="flex items-center justify-center gap-2 flex-wrap">
+      <footer className="py-6 pb-20 md:pb-6 border-t border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors">
+        <div className="flex items-center justify-center gap-2 flex-wrap px-4">
           <span>{systemSettings.schoolName || 'Tahfidz Tracker'} · Sistem Pencatatan & Evaluasi Hafalan Al-Qur'an Terpadu</span>
-          <span className="text-slate-300 dark:text-slate-700">·</span>
+          <span className="text-slate-300 dark:text-slate-700 hidden sm:inline">·</span>
           <button
             type="button"
             onClick={() => setIsDeveloperInfoOpen(true)}
-            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-850 dark:hover:text-emerald-300 font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer transition-colors"
+            className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer transition-colors"
           >
             <Info className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span>Info Pengembang</span>
+            <span>Pesan & Info Pengembang</span>
           </button>
         </div>
         <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">بارك الله فيكم · Dibuat dengan penuh dedikasi untuk para penghafal Al-Qur'an</p>
